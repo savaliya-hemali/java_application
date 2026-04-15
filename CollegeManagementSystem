@@ -1,0 +1,271 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Student class
+class Student {
+    String id, name, course, grade;
+    double attendance, fee, paid;
+
+    Student(String id, String name, String course, String grade, double attendance, double fee, double paid) {
+        this.id = id;
+        this.name = name;
+        this.course = course;
+        this.grade = grade;
+        this.attendance = attendance;
+        this.fee = fee;
+        this.paid = paid;
+    }
+
+    void display() {
+        System.out.println("ID: " + id + " | Name: " + name + " | Course: " + course +
+                " | Grade: " + grade + " | Attendance: " + attendance + "%" +
+                " | Fee: " + fee + " | Paid: " + paid);
+    }
+}
+
+// Teacher class
+class Teacher {
+    String id, name, subject, status;
+    int classes;
+
+    Teacher(String id, String name, String subject, int classes, String status) {
+        this.id = id;
+        this.name = name;
+        this.subject = subject;
+        this.classes = classes;
+        this.status = status;
+    }
+
+    void display() {
+        System.out.println("ID: " + id + " | Name: " + name + " | Subject: " + subject +
+                " | Classes: " + classes + " | Status: " + status);
+    }
+}
+
+// Main college Management System
+public class CollegeManagementSystem {
+
+    static ArrayList<Student> students = new ArrayList<>();
+    static ArrayList<Teacher> teachers = new ArrayList<>();
+    static Scanner sc = new Scanner(System.in);
+    static int studentCount = 1;
+    static int teacherCount = 1;
+
+    public static void main(String[] args) {
+        // Sample data
+        students.add(new Student("STU001", "Meera Vasoya", "Computer Science", "A", 92, 5000, 4500));
+        students.add(new Student("STU002", "Hemali Savaliya ", "Mathematics", "A+", 78, 5000, 5000));
+        students.add(new Student("STU003", "Rainy Koladiya", "Physics", "A-", 85, 5000, 2000));
+        teachers.add(new Teacher("TCH001", "Dr. Mehta", "Computer Science", 4, "Active"));
+        teachers.add(new Teacher("TCH002", "Mrs. Patel", "Mathematics", 5, "Active"));
+        studentCount = 4;
+        teacherCount = 3;
+
+        int choice;
+        do {
+            System.out.println("\n==========  college MANAGEMENT ==========");
+            System.out.println("1. Student Management");
+            System.out.println("2. Teacher Management");
+            System.out.println("3. Fee Management");
+            System.out.println("4. Attendance Report");
+            System.out.println("5. Dashboard Summary");
+            System.out.println("0. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1 -> studentMenu();
+                case 2 -> teacherMenu();
+                case 3 -> feeManagement();
+                case 4 -> attendanceReport();
+                case 5 -> dashboard();
+                case 0 -> System.out.println("Goodbye!");
+                default -> System.out.println("Invalid choice.");
+            }
+        } while (choice != 0);
+    }
+
+    // ===================== STUDENT MENU =====================
+    static void studentMenu() {
+        int choice;
+        do {
+            System.out.println("\n--- STUDENT MANAGEMENT ---");
+            System.out.println("1. Add Student");
+            System.out.println("2. View All Students");
+            System.out.println("3. Search Student");
+            System.out.println("4. Delete Student");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1 -> addStudent();
+                case 2 -> viewStudents();
+                case 3 -> searchStudent();
+                case 4 -> deleteStudent();
+            }
+        } while (choice != 0);
+    }
+
+    static void addStudent() {
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter Course: ");
+        String course = sc.nextLine();
+        System.out.print("Enter Grade (A, A+, etc): ");
+        String grade = sc.nextLine();
+        System.out.print("Enter Attendance (%): ");
+        double attendance = sc.nextDouble();
+        System.out.print("Enter Total Fee: ");
+        double fee = sc.nextDouble();
+        System.out.print("Enter Amount Paid: ");
+        double paid = sc.nextDouble();
+        sc.nextLine();
+
+        String id = "STU" + String.format("%03d", studentCount++);
+        students.add(new Student(id, name, course, grade, attendance, fee, paid));
+        System.out.println("Student added successfully! ID: " + id);
+    }
+
+    static void viewStudents() {
+        if (students.isEmpty()) {
+            System.out.println("No students found.");
+            return;
+        }
+        System.out.println("\n--- ALL STUDENTS ---");
+        for (Student s : students) s.display();
+    }
+
+    static void searchStudent() {
+        System.out.print("Enter name or ID to search: ");
+        String keyword = sc.nextLine().toLowerCase();
+        boolean found = false;
+        for (Student s : students) {
+            if (s.name.toLowerCase().contains(keyword) || s.id.toLowerCase().contains(keyword)) {
+                s.display();
+                found = true;
+            }
+        }
+        if (!found) System.out.println("No student found.");
+    }
+
+    static void deleteStudent() {
+        System.out.print("Enter Student ID to delete: ");
+        String id = sc.nextLine();
+        students.removeIf(s -> s.id.equalsIgnoreCase(id));
+        System.out.println("Student removed (if existed).");
+    }
+
+    // ===================== TEACHER MENU =====================
+    static void teacherMenu() {
+        int choice;
+        do {
+            System.out.println("\n--- TEACHER MANAGEMENT ---");
+            System.out.println("1. Add Teacher");
+            System.out.println("2. View All Teachers");
+            System.out.println("3. Delete Teacher");
+            System.out.println("0. Back");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+            sc.nextLine();
+
+            switch (choice) {
+                case 1 -> addTeacher();
+                case 2 -> viewTeachers();
+                case 3 -> deleteTeacher();
+            }
+        } while (choice != 0);
+    }
+
+    static void addTeacher() {
+        System.out.print("Enter Name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter Subject: ");
+        String subject = sc.nextLine();
+        System.out.print("Enter Number of Classes: ");
+        int classes = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter Status (Active/On Leave): ");
+        String status = sc.nextLine();
+
+        String id = "TCH" + String.format("%03d", teacherCount++);
+        teachers.add(new Teacher(id, name, subject, classes, status));
+        System.out.println("Teacher added successfully! ID: " + id);
+    }
+
+    static void viewTeachers() {
+        if (teachers.isEmpty()) {
+            System.out.println("No teachers found.");
+            return;
+        }
+        System.out.println("\n--- ALL TEACHERS ---");
+        for (Teacher t : teachers) t.display();
+    }
+
+    static void deleteTeacher() {
+        System.out.print("Enter Teacher ID to delete: ");
+        String id = sc.nextLine();
+        teachers.removeIf(t -> t.id.equalsIgnoreCase(id));
+        System.out.println("Teacher removed (if existed).");
+    }
+
+    // ===================== FEE MANAGEMENT =====================
+    static void feeManagement() {
+        System.out.println("\n--- FEE MANAGEMENT ---");
+        double total = 0, collected = 0;
+        for (Student s : students) {
+            double balance = s.fee - s.paid;
+            String status = balance <= 0 ? "CLEARED" : "OWING";
+            System.out.printf("%-20s | Fee: %.0f | Paid: %.0f | Balance: %.0f | %s%n",
+                    s.name, s.fee, s.paid, balance, status);
+            total += s.fee;
+            collected += s.paid;
+        }
+        System.out.println("---------------------------------------------------");
+        System.out.printf("Total Expected : GHS %.0f%n", total);
+        System.out.printf("Total Collected: GHS %.0f%n", collected);
+        System.out.printf("Outstanding    : GHS %.0f%n", total - collected);
+        System.out.printf("Collection Rate: %.1f%%%n", (collected / total) * 100);
+    }
+
+    // ===================== ATTENDANCE REPORT =====================
+    static void attendanceReport() {
+        System.out.println("\n--- ATTENDANCE REPORT ---");
+        double totalAttendance = 0;
+        for (Student s : students) {
+            String flag = s.attendance < 75 ? " *** LOW ATTENDANCE ***" : "";
+            System.out.printf("%-20s | %s | Attendance: %.1f%%%s%n",
+                    s.name, s.course, s.attendance, flag);
+            totalAttendance += s.attendance;
+        }
+        System.out.println("-----------------------------------------");
+        System.out.printf("College Average Attendance: %.1f%%%n", totalAttendance / students.size());
+    }
+
+    // ===================== DASHBOARD =====================
+    static void dashboard() {
+        System.out.println("\n========== DASHBOARD SUMMARY ==========");
+        System.out.println("Total Students : " + students.size());
+        System.out.println("Total Teachers : " + teachers.size());
+
+        double avgAtt = students.stream().mapToDouble(s -> s.attendance).average().orElse(0);
+        System.out.printf("Avg Attendance : %.1f%%%n", avgAtt);
+
+        double totalFee = students.stream().mapToDouble(s -> s.fee).sum();
+        double paidFee  = students.stream().mapToDouble(s -> s.paid).sum();
+        System.out.printf("Fee Collected  : GHS %.0f / %.0f (%.1f%%)%n",
+                paidFee, totalFee, (paidFee / totalFee) * 100);
+
+        System.out.println("\nLow Attendance Alerts (< 75%):");
+        boolean found = false;
+        for (Student s : students) {
+            if (s.attendance < 75) {
+                System.out.println("  !! " + s.name + " - " + s.attendance + "%");
+                found = true;
+            }
+        }
+        if (!found) System.out.println("  All students meet attendance requirements.");
+    }
+}
